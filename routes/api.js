@@ -1,5 +1,5 @@
 const apiRouter = require("express").Router();
-const { selectRecipes } = require("../models/recipes.model");
+const { selectRecipes, selectRecipe } = require("../models/recipes.model");
 
 apiRouter.get("/", (_, res) => {
   res.json({ message: "ok" });
@@ -16,6 +16,11 @@ apiRouter.get("/recipes", async ({ query }, res) => {
   }
   const recipes = await selectRecipes(exclIngredients);
   res.status(200).send({ recipes });
+});
+
+apiRouter.get("/recipes/:id", async ({ params: { id } }, res) => {
+  const recipe = await selectRecipe(id);
+  res.status(200).send({ recipe });
 });
 
 module.exports = apiRouter;

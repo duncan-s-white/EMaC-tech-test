@@ -46,3 +46,22 @@ describe("GET - /api/recipes", () => {
     });
   });
 });
+
+describe("GET - /api/recipes/:id", () => {
+  test("Status 200: return a recipe based on it's id", async () => {
+    const expected = {
+      id: "recipe-59",
+      imageUrl: "http://www.images.com/18",
+      instructions:
+        "60 seconds on the highest setting your blender has, or until a smooth paste has formed",
+      ingredients: [
+        { name: "demerara sugar", grams: 25 },
+        { name: "flax", grams: 66 },
+        { name: "apple juice", grams: 44 },
+        { name: "oat milk", grams: 198 },
+      ],
+    };
+    const { body } = await request.get("/api/recipes/recipe-59").expect(200);
+    expect(body.recipe).toEqual(expected);
+  });
+});
