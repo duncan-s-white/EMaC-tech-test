@@ -11,7 +11,7 @@ describe("GET - /api", () => {
 });
 
 describe("GET - /api/recipes", () => {
-  test("Status 200: returns a list of all recipes", async () => {
+  test("Status 200: returns a list of all recipes with expected properties", async () => {
     const { body } = await request.get("/api/recipes").expect(200);
     body.recipes.forEach((recipe) => {
       expect(recipe).toEqual(
@@ -23,6 +23,22 @@ describe("GET - /api/recipes", () => {
             expect.objectContaining({
               name: expect.any(String),
               grams: expect.any(Number),
+            }),
+          ]),
+        })
+      );
+    });
+  });
+  test("Status 200: returns filtered list of recipes based on excluded ingredients", async () => {
+    const { body } = await request
+      .get("/api/recipes?exclude_ingredients=apples,bananas,carrots")
+      .expect(200);
+    body.recipes.forEach((recipe) => {
+      expect(recipe).not.toEqual(
+        expect.objectContaining({
+          ingredients: expect.arrayContaining([
+            expect.objectContaining({
+              name: expect.stringMatching(/apple|banana|carrot/),
             }),
           ]),
         })

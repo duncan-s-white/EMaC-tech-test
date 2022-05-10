@@ -5,8 +5,16 @@ apiRouter.get("/", (_, res) => {
   res.json({ message: "ok" });
 });
 
-apiRouter.get("/recipes", async (_, res) => {
-  const recipes = await selectRecipes();
+apiRouter.get("/recipes", async ({ query }, res) => {
+  let exclIngredients = [];
+  if (query.exclude_ingredients) {
+    exclIngredients = query.exclude_ingredients.split(",").map((ingredient) => {
+      return ingredient.slice(-1) === "s"
+        ? ingredient.slice(0, -1)
+        : ingredient;
+    });
+  }
+  const recipes = await selectRecipes(exclIngredients);
   res.status(200).send({ recipes });
 });
 
